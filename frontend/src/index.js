@@ -1,15 +1,21 @@
-import React from "react"
+import React, { Suspense, lazy } from "react"
 import ReactDOM from "react-dom/client"
 import "./index.css"
-import App from "./App"
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration"
 import reportWebVitals from "./reportWebVitals"
-import "bootstrap/dist/css/bootstrap.min.css"
+import Lottie from "lottie-react"
+import loadingAnimation from "./assests/loading.json"
+
+const LazyApp = lazy(() => import("./App"))
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
   <React.StrictMode>
-    <App />
+    <Suspense
+      fallback={<Lottie animationData={loadingAnimation} className="loading" />}
+    >
+      <LazyApp />
+    </Suspense>
   </React.StrictMode>
 )
 

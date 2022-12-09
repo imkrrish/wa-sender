@@ -1,0 +1,23 @@
+.container {
+  height: auto;
+  margin-top: 2rem;
+  display: flex !important;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.setupcontainer {
+  padding: 0 2rem;
+}
+
+.heading {
+  color: #1f294b;
+  font-weight: bold;
+}
+
+.list {
+  color: #3a4468;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}

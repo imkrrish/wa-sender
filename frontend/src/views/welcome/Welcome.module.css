@@ -1,0 +1,21 @@
+.bot {
+  height: 27rem;
+  margin-top: 3rem;
+}
+
+.heading {
+  color: #c1ccf2;
+  text-align: center;
+}
+
+.subHeading {
+  color: #5d6582;
+  text-align: center;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}

@@ -1,0 +1,22 @@
+.container {
+    height: auto;
+    display: flex !important;
+    margin-top: 2rem;
+    /* align-items: center; */
+    justify-content: center;
+  }
+
+  .textArea {
+    transform: translateX(-50%);
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+}
+
+.button {
+    width: 37rem;
+    margin-top: 1.5rem;
+    text-align: right;
+}

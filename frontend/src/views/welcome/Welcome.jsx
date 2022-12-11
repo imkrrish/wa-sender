@@ -5,8 +5,10 @@ import styles from "./Welcome.module.css"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
+import { useNavigate } from "react-router-dom"
 
-const Welcome = () => {
+const Welcome = ({ setwelcome }) => {
+  const navigate = useNavigate()
   return (
     <Container maxWidth="sm">
       <Lottie animationData={WelcomeBot} className={styles.bot} />
@@ -21,7 +23,15 @@ const Welcome = () => {
         A simple and reliable Whatsapp Bot to send bulk messages
       </Typography>
       <div className={styles.button}>
-        <Button variant="contained">Get Started</Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setwelcome(false)
+            navigate("/login")
+          }}
+        >
+          Get Started
+        </Button>
       </div>
     </Container>
   )

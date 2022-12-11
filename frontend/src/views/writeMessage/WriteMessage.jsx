@@ -2,8 +2,11 @@ import { Box, Button, Container, TextField } from "@mui/material"
 import React from "react"
 import SendIcon from "@mui/icons-material/Send"
 import styles from "./WriteMessage.module.css"
+import { useNavigate } from "react-router-dom"
 
-const WriteMessage = () => {
+const WriteMessage = ({ setwelcome }) => {
+  const navigate = useNavigate()
+  setwelcome(false)
   return (
     <Container className={styles.container}>
       <Box
@@ -33,7 +36,13 @@ const WriteMessage = () => {
           />
         </div>
         <div className={styles.button}>
-          <Button variant="contained" endIcon={<SendIcon />}>
+          <Button
+            variant="contained"
+            endIcon={<SendIcon />}
+            onClick={() => {
+              navigate("/messagesent")
+            }}
+          >
             Send Message
           </Button>
         </div>

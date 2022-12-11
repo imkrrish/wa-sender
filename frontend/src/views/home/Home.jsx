@@ -7,11 +7,14 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import CircularProgress from "@mui/material/CircularProgress"
 import { green } from "@mui/material/colors"
 import xlsxIcon from "../../assests/excel.png"
+import { useNavigate } from "react-router-dom"
 
-const Home = () => {
+const Home = ({ setwelcome }) => {
   const [loading, setLoading] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const timer = useRef()
+  const navigate = useNavigate()
+  setwelcome(false)
 
   const buttonSx = {
     ...(success && {
@@ -36,6 +39,9 @@ const Home = () => {
         setSuccess(!success)
         setLoading(false)
       }, 2000)
+    }
+    if (success) {
+      navigate("/writemessage")
     }
   }
 

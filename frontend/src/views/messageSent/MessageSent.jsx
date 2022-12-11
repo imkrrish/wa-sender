@@ -69,8 +69,9 @@ const rows = [
   { id: 9, Name: "Roxie", Phone: 4456738215, Status: "Failed" }
 ]
 
-const MessageSent = () => {
+const MessageSent = ({ setwelcome }) => {
   const [pageSize, setPageSize] = useState(5)
+  setwelcome(false)
   return (
     <Container className={styles.container}>
       <Box

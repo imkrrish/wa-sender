@@ -5,8 +5,11 @@ import styles from "./Login.module.css"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import SettingsIcon from "@mui/icons-material/Settings"
 import loadingAnimation from "../../assests/loading.json"
+import { useNavigate } from "react-router-dom"
 
-const Login = () => {
+const Login = ({ setwelcome }) => {
+  setwelcome(false)
+  const navigate = useNavigate()
   return (
     <Container className={styles.container}>
       <Box
@@ -79,7 +82,10 @@ const Login = () => {
               }}
             >
               <Lottie
-                animationData={loadingAnimation} /*className={styles.bot} */
+                animationData={loadingAnimation}
+                onClick={() => {
+                  navigate("/home")
+                }}
               />
             </Box>
           </Grid>

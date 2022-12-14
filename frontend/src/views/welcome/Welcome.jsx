@@ -5,10 +5,10 @@ import styles from "./Welcome.module.css"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
-import { useNavigate } from "react-router-dom"
-
+import { SocketContext } from "../../context"
+import { useContext } from "react"
 const Welcome = ({ setwelcome }) => {
-  const navigate = useNavigate()
+  const { getStarted } = useContext(SocketContext)
   return (
     <Container maxWidth="sm">
       <Lottie animationData={WelcomeBot} className={styles.bot} />
@@ -27,7 +27,7 @@ const Welcome = ({ setwelcome }) => {
           variant="contained"
           onClick={() => {
             setwelcome(false)
-            navigate("/login")
+            getStarted()
           }}
         >
           Get Started

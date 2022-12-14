@@ -12,11 +12,13 @@ import {
 } from "@mui/x-data-grid"
 
 import styles from "./MessageSent.module.css"
+import { SocketContext } from "../../context"
+import { useContext } from "react"
 
 const columns = [
   { field: "id", headerName: "ID", width: 90, flex: 1 },
   {
-    field: "Name",
+    field: "name",
     headerName: "Name",
     width: 350,
     sortable: true,
@@ -24,7 +26,7 @@ const columns = [
     flex: 1
   },
   {
-    field: "Phone",
+    field: "number",
     headerName: "Phone",
     width: 210,
     sortable: true,
@@ -32,21 +34,21 @@ const columns = [
     flex: 1
   },
   {
-    field: "Status",
+    field: "status",
     headerName: "Status",
     flex: 1,
     renderCell: (params) => (
       <Chip
-        label={params.row.Status}
+        label={params.row.status}
         color={
-          (params.row.Status === "Sent" && "success") ||
-          (params.row.Status === "Failed" && "error") ||
-          (params.row.Status === "Skiped" && "warning")
+          (params.row.status === "Sent" && "success") ||
+          (params.row.status === "Failed" && "error") ||
+          (params.row.status === "Skiped" && "warning")
         }
         icon={
-          (params.row.Status === "Sent" && <DoneIcon />) ||
-          (params.row.Status === "Failed" && <ErrorOutlineIcon />) ||
-          (params.row.Status === "Skiped" && <PriorityHighIcon />)
+          (params.row.status === "Sent" && <DoneIcon />) ||
+          (params.row.status === "Failed" && <ErrorOutlineIcon />) ||
+          (params.row.status === "Skiped" && <PriorityHighIcon />)
         }
       />
     ),
@@ -57,21 +59,13 @@ const columns = [
   }
 ]
 
-const rows = [
-  { id: 1, Name: "Snow", Phone: 7689089538, Status: "Sent" },
-  { id: 2, Name: "Lannister", Phone: 2552356442, Status: "Sent" },
-  { id: 3, Name: "Lannister", Phone: 4456738215, Status: "Sent" },
-  { id: 4, Name: "Stark", Phone: 4456738215, Status: "Sent" },
-  { id: 5, Name: "Targaryen", Phone: 2552356442, Status: "Failed" },
-  { id: 6, Name: "Melisandre", Phone: 14456738215, Status: "Failed" },
-  { id: 7, Name: "Clifford", Phone: 2552356442, Status: "Skiped" },
-  { id: 8, Name: "Frances", Phone: 7689089538, Status: "Sent" },
-  { id: 9, Name: "Roxie", Phone: 4456738215, Status: "Failed" }
-]
-
 const MessageSent = ({ setwelcome }) => {
+  const { Counter, Contact } = useContext(SocketContext)
   const [pageSize, setPageSize] = useState(5)
   setwelcome(false)
+  console.log(Counter)
+  console.log(Contact)
+
   return (
     <Container className={styles.container}>
       <Box
@@ -88,7 +82,7 @@ const MessageSent = ({ setwelcome }) => {
         }}
       >
         <DataGrid
-          rows={rows}
+          rows={Contact.length > 0 && Contact}
           //   loading={true}
           columns={columns}
           pagination={true}
@@ -101,7 +95,7 @@ const MessageSent = ({ setwelcome }) => {
                 sx={{ justifyContent: "space-between", marginBottom: "1rem" }}
               >
                 <div>
-                  <Badge color="error" badgeContent="5">
+                  <Badge color="error" badgeContent={Counter.total}>
                     <Chip
                       label="Total"
                       color="info"
@@ -110,14 +104,14 @@ const MessageSent = ({ setwelcome }) => {
                   </Badge>
                   <Badge
                     color="error"
-                    badgeContent="5"
+                    badgeContent={Counter.success}
                     sx={{ marginLeft: "1rem" }}
                   >
                     <Chip label="Sent" color="success" icon={<DoneIcon />} />
                   </Badge>
                   <Badge
                     color="error"
-                    badgeContent="5"
+                    badgeContent={Counter.skiped}
                     sx={{ marginLeft: "1rem" }}
                   >
                     <Chip
@@ -128,7 +122,7 @@ const MessageSent = ({ setwelcome }) => {
                   </Badge>
                   <Badge
                     color="secondary"
-                    badgeContent="5"
+                    badgeContent={Counter.failed}
                     sx={{ marginLeft: "1rem" }}
                   >
                     <Chip

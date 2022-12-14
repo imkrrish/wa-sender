@@ -1,5 +1,5 @@
 import { Container, Box, Button } from "@mui/material"
-import React, { useRef } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import styles from "./Home.module.css"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import ArticleIcon from "@mui/icons-material/Article"
@@ -7,13 +7,16 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import CircularProgress from "@mui/material/CircularProgress"
 import { green } from "@mui/material/colors"
 import xlsxIcon from "../../assests/excel.png"
-import { useNavigate } from "react-router-dom"
+import * as XLSX from "xlsx"
+import { SocketContext } from "../../context"
 
 const Home = ({ setwelcome }) => {
-  const [loading, setLoading] = React.useState(false)
-  const [success, setSuccess] = React.useState(false)
-  const timer = useRef()
-  const navigate = useNavigate()
+  const { excelFile, setExcelFile, excelData, setExcelData, readExcelData } =
+    useContext(SocketContext)
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [fileName, setfileName] = useState("")
+  const [fileSize, setfileSize] = useState(0)
   setwelcome(false)
 
   const buttonSx = {
@@ -25,24 +28,55 @@ const Home = ({ setwelcome }) => {
     })
   }
 
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(timer.current)
+  useEffect(() => {
+    if (excelData !== null) {
+      setSuccess(true)
+      setLoading(false)
     }
-  }, [])
+  }, [excelData, setSuccess, setLoading, success])
 
   const handleButtonClick = () => {
     if (!loading) {
       setSuccess(false)
       setLoading(true)
-      timer.current = window.setTimeout(() => {
-        setSuccess(!success)
-        setLoading(false)
-      }, 2000)
+      handleRead()
     }
     if (success) {
-      navigate("/writemessage")
+      readExcelData()
     }
+  }
+
+  const handleFile = (e) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile) {
+      console.log(selectedFile)
+      setfileSize(selectedFile.size)
+      setfileName(selectedFile.name)
+      const reader = new FileReader()
+      reader.readAsArrayBuffer(selectedFile)
+      reader.onload = (e) => {
+        setExcelFile(e.target.result)
+      }
+    } else {
+      console.log("plz select your file")
+    }
+  }
+
+  const handleRead = () => {
+    if (excelFile !== null) {
+      const workbook = XLSX.read(excelFile, { type: "buffer" })
+      const worksheetName = workbook.SheetNames[0]
+      const worksheet = workbook.Sheets[worksheetName]
+      const data = XLSX.utils.sheet_to_json(worksheet)
+      setExcelData(data)
+    } else {
+      setExcelData(null)
+    }
+  }
+
+  const removeFile = () => {
+    setExcelFile(null)
+    setExcelData(null)
   }
 
   return (
@@ -63,63 +97,68 @@ const Home = ({ setwelcome }) => {
               <CloudUploadIcon sx={{ fontSize: "5rem" }} />
               <p>Drag & Drop your file here, or click to select file</p>
             </div>
-            <input className={styles.dropfileinput} type="file" value="" />
+            <input
+              className={styles.dropfileinput}
+              type="file"
+              onChange={handleFile}
+              value={setExcelFile}
+              required
+            />
           </div>
-
-          <div className={styles.dropfilepreview}>
-            <p className={styles.dropfilepreviewtitle}>Ready to upload</p>
-            <div className={styles.dropfilepreviewitem}>
-              <img
-                className={styles.dropfilepreviewitemimg}
-                src={xlsxIcon}
-                alt=""
-              />
-              <div className={styles.dropfilepreviewiteminfo}>
-                <p className={styles.dropfilepreviewiteminfoP}>
-                  only xlsx files
-                </p>
-                <p>240kb</p>
-              </div>
-              <span
-                className={styles.dropfilepreviewitemdel}
-                // onClick={() => fileRemove(item)}
-              >
-                x
-              </span>
-            </div>
-            <Box
-              sx={{
-                m: 1,
-                position: "relative",
-                width: "fit-content",
-                float: "right"
-              }}
-            >
-              <Button
-                variant="contained"
-                sx={buttonSx}
-                disabled={loading}
-                onClick={handleButtonClick}
-                startIcon={!success && <ArticleIcon />}
-                endIcon={success && <NavigateNextIcon />}
-              >
-                {success ? "Next" : "Read File"}
-              </Button>
-              {loading && (
-                <CircularProgress
-                  size={24}
-                  sx={{
-                    color: green[500],
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    marginTop: "-12px",
-                    marginLeft: "-12px"
-                  }}
+          {excelFile !== null && (
+            <div className={styles.dropfilepreview}>
+              <p className={styles.dropfilepreviewtitle}>Ready to upload</p>
+              <div className={styles.dropfilepreviewitem}>
+                <img
+                  className={styles.dropfilepreviewitemimg}
+                  src={xlsxIcon}
+                  alt=""
                 />
-              )}
-            </Box>
-          </div>
+                <div className={styles.dropfilepreviewiteminfo}>
+                  <p className={styles.dropfilepreviewiteminfoP}>{fileName}</p>
+                  <p>{fileSize} B</p>
+                </div>
+                <span
+                  className={styles.dropfilepreviewitemdel}
+                  onClick={removeFile}
+                >
+                  x
+                </span>
+              </div>
+              <Box
+                sx={{
+                  m: 1,
+                  position: "relative",
+                  width: "fit-content",
+                  float: "right"
+                }}
+              >
+                <Button
+                  variant="contained"
+                  sx={buttonSx}
+                  disabled={loading}
+                  onClick={handleButtonClick}
+                  startIcon={!success && <ArticleIcon />}
+                  endIcon={success && <NavigateNextIcon />}
+                >
+                  {success ? "Next" : "Read File"}
+                </Button>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: green[500],
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px"
+                    }}
+                  />
+                )}
+              </Box>
+            </div>
+          )}
         </div>
       </Box>
     </Container>

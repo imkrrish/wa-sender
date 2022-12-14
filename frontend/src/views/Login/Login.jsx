@@ -1,15 +1,49 @@
 import { Container, Box, Grid, Typography } from "@mui/material"
-import React from "react"
+import React, { useContext, useRef, useState } from "react"
 import Lottie from "lottie-react"
 import styles from "./Login.module.css"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import SettingsIcon from "@mui/icons-material/Settings"
+// import ReplayIcon from "@mui/icons-material/Replay"
 import loadingAnimation from "../../assests/loading.json"
-import { useNavigate } from "react-router-dom"
+import QRCodeStyling from "qr-code-styling"
+// import HelpyLogo from "../../assests/Helpy-logo.svg"
+import { SocketContext } from "../../context"
+import { useEffect } from "react"
+
+const qrcode = new QRCodeStyling({
+  width: 300,
+  height: 300,
+  dotsOptions: {
+    color: "#4267b2",
+    type: "rounded"
+  }
+})
 
 const Login = ({ setwelcome }) => {
+  const { QR, getStarted } = useContext(SocketContext)
+  const [loading, setLoading] = useState(true)
+  const QRref = useRef(null)
   setwelcome(false)
-  const navigate = useNavigate()
+
+  useEffect(() => {
+    qrcode.append(QRref.current)
+    if (
+      window.performance.navigation.type ===
+        window.performance.navigation.TYPE_RELOAD &&
+      loading
+    ) {
+      getStarted()
+    }
+  }, [])
+
+  useEffect(() => {
+    qrcode.update({ data: QR })
+    if (QR) {
+      setLoading(false)
+    }
+  }, [QR])
+
   return (
     <Container className={styles.container}>
       <Box
@@ -81,12 +115,16 @@ const Login = ({ setwelcome }) => {
                 justifySelf: "center"
               }}
             >
-              <Lottie
-                animationData={loadingAnimation}
-                onClick={() => {
-                  navigate("/home")
-                }}
-              />
+              {console.log("ref", QRref.current)}
+              {QRref.current === null ||
+                (loading && <Lottie animationData={loadingAnimation} />)}
+              {/* <div className={styles.reload} onClick={getStarted}>
+                  <ReplayIcon />
+                  <Typography variant="subtitle1" className={styles.reloadText}>
+                    Click to reload QR Code
+                  </Typography>
+                </div> */}
+              {QRref !== null && <div ref={QRref} />}
             </Box>
           </Grid>
         </Grid>

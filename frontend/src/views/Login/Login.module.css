@@ -21,3 +21,13 @@
   align-items: center;
   justify-items: center;
 }
+
+.reload {
+  width: 100%;
+  height: 100%;
+  color: #0c1430;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

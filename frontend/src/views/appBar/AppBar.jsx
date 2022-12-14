@@ -8,8 +8,11 @@ import MenuItem from "@mui/material/MenuItem"
 import Menu from "@mui/material/Menu"
 import styles from "./AppBar.module.css"
 import { Avatar, Container } from "@mui/material"
+import { SocketContext } from "../../context"
+import { useContext } from "react"
 
 export default function MenuAppBar() {
+  const { logout } = useContext(SocketContext)
   const auth = true
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -50,7 +53,7 @@ export default function MenuAppBar() {
                 onClick={handleMenu}
               >
                 <Avatar>
-                  <AccountCircle fontSize="large"/>
+                  <AccountCircle fontSize="large" />
                 </Avatar>
               </IconButton>
               <Menu
@@ -69,7 +72,13 @@ export default function MenuAppBar() {
                 onClose={handleClose}
                 sx={{ top: "8%" }}
               >
-                <MenuItem onClick={handleClose}>Log Out</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logout()
+                  }}
+                >
+                  Log Out
+                </MenuItem>
                 {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
               </Menu>
             </div>

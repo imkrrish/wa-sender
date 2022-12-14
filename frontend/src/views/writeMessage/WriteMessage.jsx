@@ -1,12 +1,17 @@
 import { Box, Button, Container, TextField } from "@mui/material"
-import React from "react"
+import React, { useContext } from "react"
 import SendIcon from "@mui/icons-material/Send"
 import styles from "./WriteMessage.module.css"
-import { useNavigate } from "react-router-dom"
+import { SocketContext } from "../../context"
 
 const WriteMessage = ({ setwelcome }) => {
-  const navigate = useNavigate()
+  const { setMessage, sendMessage } = useContext(SocketContext)
   setwelcome(false)
+
+  const handleChange = (e) => {
+    setMessage(e.target.value)
+  }
+
   return (
     <Container className={styles.container}>
       <Box
@@ -22,30 +27,31 @@ const WriteMessage = ({ setwelcome }) => {
           alignItems: "center"
         }}
       >
-        <div>
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Message"
-            multiline
-            maxRows={11}
-            minRows={11}
-            sx={{ width: "37rem" }}
-            className={styles.textArea}
-            //   value={value}
-            //   onChange={handleChange}
-          />
-        </div>
-        <div className={styles.button}>
-          <Button
-            variant="contained"
-            endIcon={<SendIcon />}
-            onClick={() => {
-              navigate("/messagesent")
-            }}
-          >
-            Send Message
-          </Button>
-        </div>
+        <form>
+          <div>
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Message"
+              multiline
+              maxRows={11}
+              minRows={11}
+              sx={{ width: "37rem" }}
+              className={styles.textArea}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className={styles.button}>
+            <Button
+              variant="contained"
+              endIcon={<SendIcon />}
+              type="submit"
+              onClick={sendMessage}
+            >
+              Send Message
+            </Button>
+          </div>
+        </form>
       </Box>
     </Container>
   )

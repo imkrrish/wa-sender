@@ -1,11 +1,11 @@
 import { Container, Box, Grid, Typography } from "@mui/material"
 import React, { useContext, useRef, useState } from "react"
 import Lottie from "lottie-react"
+import loadingAnimation from "../../assests/loading.json"
 import styles from "./Login.module.css"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import SettingsIcon from "@mui/icons-material/Settings"
 // import ReplayIcon from "@mui/icons-material/Replay"
-import loadingAnimation from "../../assests/loading.json"
 import QRCodeStyling from "qr-code-styling"
 // import HelpyLogo from "../../assests/Helpy-logo.svg"
 import { SocketContext } from "../../context"
@@ -35,7 +35,7 @@ const Login = ({ setwelcome }) => {
     ) {
       getStarted()
     }
-  }, [])
+  }, []) /* eslint-disable-line */
 
   useEffect(() => {
     qrcode.update({ data: QR })
@@ -115,9 +115,9 @@ const Login = ({ setwelcome }) => {
                 justifySelf: "center"
               }}
             >
-              {console.log("ref", QRref.current)}
-              {QRref.current === null ||
-                (loading && <Lottie animationData={loadingAnimation} />)}
+              {(QRref.current === null || loading) && (
+                <Lottie animationData={loadingAnimation} />
+              )}
               {/* <div className={styles.reload} onClick={getStarted}>
                   <ReplayIcon />
                   <Typography variant="subtitle1" className={styles.reloadText}>

@@ -54,6 +54,7 @@ const ContextProvider = ({ children }) => {
     })
 
     socket.on("disconnected", () => {
+      setQR(null)
       navigate("/login")
     })
   }, [navigate])

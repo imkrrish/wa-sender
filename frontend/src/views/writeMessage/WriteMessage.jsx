@@ -4,9 +4,8 @@ import SendIcon from "@mui/icons-material/Send"
 import styles from "./WriteMessage.module.css"
 import { SocketContext } from "../../context"
 
-const WriteMessage = ({ setwelcome }) => {
+const WriteMessage = () => {
   const { setMessage, sendMessage } = useContext(SocketContext)
-  setwelcome(false)
 
   const handleChange = (e) => {
     setMessage(e.target.value)

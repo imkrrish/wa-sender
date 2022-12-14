@@ -1,19 +1,21 @@
 import { createContext, useEffect, useState } from "react"
 import { io } from "socket.io-client"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const SocketContext = createContext()
 
 const socket = io.connect("http://localhost:5000")
 
-const ContextProvider = ({ children }) => {
+const ContextProvider = ({ children, setwelcome }) => {
   const [QR, setQR] = useState(null)
+  const [authenticated, setauthenticated] = useState(false)
   const [excelFile, setExcelFile] = useState(null)
   const [excelData, setExcelData] = useState(null)
   const [message, setMessage] = useState("")
   const [Counter, setCounter] = useState({ failed: 0, skiped: 0, success: 0 })
   const [Contact, setContact] = useState([])
   const navigate = useNavigate()
+  const location = useLocation()
   const getStarted = () => {
     socket.emit("getStarted")
     navigate("/login")
@@ -35,12 +37,28 @@ const ContextProvider = ({ children }) => {
     }
   }
 
+  const sendMore = () => {
+    setExcelFile(null)
+    setExcelData(null)
+    setMessage("")
+    setContact([])
+    socket.emit("reset")
+    navigate("/home")
+  }
+
   useEffect(() => {
+    if (location.pathname === "/") {
+      setwelcome(true)
+    } else {
+      setwelcome(false)
+    }
+
     socket.on("qr", (qr) => {
       setQR(qr)
     })
 
     socket.on("authenticated", () => {
+      setauthenticated(true)
       navigate("/home")
     })
 
@@ -55,13 +73,15 @@ const ContextProvider = ({ children }) => {
 
     socket.on("disconnected", () => {
       setQR(null)
+      setauthenticated(false)
       navigate("/login")
     })
-  }, [navigate])
+  }, [navigate, location, setwelcome])
 
   return (
     <SocketContext.Provider
       value={{
+        authenticated,
         getStarted,
         QR,
         socket,
@@ -74,7 +94,8 @@ const ContextProvider = ({ children }) => {
         setMessage,
         sendMessage,
         Counter,
-        Contact
+        Contact,
+        sendMore
       }}
     >
       {children}
@@ -83,13 +104,3 @@ const ContextProvider = ({ children }) => {
 }
 
 export { ContextProvider, SocketContext }
-
-// { id: 1, name: "Snow", number: 7689089538, status: "Sent" },
-//     { id: 2, name: "Lannister", number: 2552356442, status: "Sent" },
-//     { id: 3, name: "Lannister", number: 4456738215, status: "Sent" },
-//     { id: 4, name: "Stark", number: 4456738215, status: "Sent" },
-//     { id: 5, name: "Targaryen", number: 2552356442, status: "Failed" },
-//     { id: 6, name: "Melisandre", number: 14456738215, status: "Failed" },
-//     { id: 7, name: "Clifford", number: 2552356442, status: "Skiped" },
-//     { id: 8, name: "Frances", number: 7689089538, status: "Sent" },
-//     { id: 9, name: "Roxie", number: 4456738215, status: "Failed" }

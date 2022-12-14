@@ -20,11 +20,11 @@ const qrcode = new QRCodeStyling({
   }
 })
 
-const Login = ({ setwelcome }) => {
+const Login = () => {
   const { QR, getStarted } = useContext(SocketContext)
   const [loading, setLoading] = useState(true)
   const QRref = useRef(null)
-  setwelcome(false)
+  // setwelcome(false)
 
   useEffect(() => {
     qrcode.append(QRref.current)

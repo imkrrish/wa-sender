@@ -10,14 +10,13 @@ import xlsxIcon from "../../assests/excel.png"
 import * as XLSX from "xlsx"
 import { SocketContext } from "../../context"
 
-const Home = ({ setwelcome }) => {
+const Home = () => {
   const { excelFile, setExcelFile, excelData, setExcelData, readExcelData } =
     useContext(SocketContext)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [fileName, setfileName] = useState("")
   const [fileSize, setfileSize] = useState(0)
-  setwelcome(false)
 
   const buttonSx = {
     ...(success && {

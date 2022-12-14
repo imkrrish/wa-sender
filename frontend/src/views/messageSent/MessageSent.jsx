@@ -59,10 +59,9 @@ const columns = [
   }
 ]
 
-const MessageSent = ({ setwelcome }) => {
-  const { Counter, Contact } = useContext(SocketContext)
+const MessageSent = () => {
+  const { Counter, Contact, sendMore } = useContext(SocketContext)
   const [pageSize, setPageSize] = useState(5)
-  setwelcome(false)
   console.log(Counter)
   console.log(Contact)
 
@@ -82,8 +81,7 @@ const MessageSent = ({ setwelcome }) => {
         }}
       >
         <DataGrid
-          rows={Contact.length > 0 && Contact}
-          //   loading={true}
+          rows={Contact.length > 0 ? Contact : []}
           columns={columns}
           pagination={true}
           pageSize={pageSize}
@@ -155,7 +153,7 @@ const MessageSent = ({ setwelcome }) => {
           }}
         />
 
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={sendMore}>
           Send More
         </Button>
       </Box>

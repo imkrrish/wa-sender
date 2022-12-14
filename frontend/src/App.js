@@ -14,7 +14,7 @@ function App() {
   const [welcome, setwelcome] = useState(true)
   return (
     <BrowserRouter>
-      <ContextProvider>
+      <ContextProvider setwelcome={setwelcome}>
         {!welcome && <AppBar />}
         <Suspense
           fallback={
@@ -22,17 +22,11 @@ function App() {
           }
         >
           <Routes>
-            <Route path="/" element={<Welcome setwelcome={setwelcome} />} />
-            <Route path="/login" element={<Login setwelcome={setwelcome} />} />
-            <Route path="/home" element={<Home setwelcome={setwelcome} />} />
-            <Route
-              path="/writemessage"
-              element={<WriteMessage setwelcome={setwelcome} />}
-            />
-            <Route
-              path="/messagesent"
-              element={<MessageSent setwelcome={setwelcome} />}
-            />
+            <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/writemessage" element={<WriteMessage />} />
+            <Route path="/messagesent" element={<MessageSent />} />
           </Routes>
         </Suspense>
       </ContextProvider>

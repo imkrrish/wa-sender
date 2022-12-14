@@ -12,8 +12,7 @@ import { SocketContext } from "../../context"
 import { useContext } from "react"
 
 export default function MenuAppBar() {
-  const { logout } = useContext(SocketContext)
-  const auth = true
+  const { logout, authenticated } = useContext(SocketContext)
   const [anchorEl, setAnchorEl] = React.useState(null)
 
   const handleMenu = (event) => {
@@ -43,7 +42,7 @@ export default function MenuAppBar() {
             alt=""
             sx={{ flexGrow: 1 }}
           />
-          {auth && (
+          {authenticated && (
             <div>
               <IconButton
                 size="large"

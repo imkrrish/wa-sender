@@ -74,15 +74,19 @@ io.on("connection", (socket) => {
   })
 
   client.on("disconnected", async (reason) => {
-    console.log("message", "Whatsapp is disconnected!")
+    console.log("disconnected", reason)
     await client.destroy()
-    console.log("message", "Whatsapp is disconnected!")
+    console.log("disconnected", reason)
     client.initialize()
     socket.emit("disconnected")
   })
 
   socket.on("logout", async () => {
-    await client.logout()
+    try {
+      await client.logout()
+    } catch (err) {
+      console.log(err)
+    }
   })
 
   socket.on("readExcelData", (excelData) => {
@@ -104,6 +108,8 @@ io.on("connection", (socket) => {
               client.sendMessage(final_number, message)
             } catch (err) {
               console.log(err)
+              contact.status = "Failed"
+              counter.failed++
             } finally {
               contact.status = "Sent"
               counter.success++

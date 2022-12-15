@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import { SocketContext } from "../../context"
 import { useContext } from "react"
-const Welcome = ({ setwelcome }) => {
+const Welcome = () => {
   const { getStarted } = useContext(SocketContext)
   return (
     <Container maxWidth="sm">
@@ -26,7 +26,6 @@ const Welcome = ({ setwelcome }) => {
         <Button
           variant="contained"
           onClick={() => {
-            setwelcome(false)
             getStarted()
           }}
         >

@@ -84,7 +84,6 @@ io.on("connection", (socket) => {
   socket.on("reset", () => {
     ContactsData.length = 0
     counter = { total: 0, failed: 0, success: 0, skiped: 0 }
-    console.log(ContactsData, counter)
   })
 
   socket.on("logout", async () => {

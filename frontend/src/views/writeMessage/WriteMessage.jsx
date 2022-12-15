@@ -1,11 +1,18 @@
 import { Box, Button, Container, TextField } from "@mui/material"
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import SendIcon from "@mui/icons-material/Send"
 import styles from "./WriteMessage.module.css"
 import { SocketContext } from "../../context"
 
 const WriteMessage = () => {
-  const { setMessage, sendMessage } = useContext(SocketContext)
+  const { setMessage, sendMessage, authenticated, Navigate } =
+    useContext(SocketContext)
+
+  useEffect(() => {
+    if (!authenticated) {
+      Navigate("/login")
+    }
+  }, [authenticated, Navigate])
 
   const handleChange = (e) => {
     setMessage(e.target.value)

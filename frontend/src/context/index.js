@@ -30,6 +30,10 @@ const ContextProvider = ({ children, setwelcome }) => {
     navigate("/writemessage")
   }
 
+  const Navigate = (link) => {
+    navigate(link)
+  }
+
   const sendMessage = async (e) => {
     e.preventDefault()
     if (message) {
@@ -53,13 +57,15 @@ const ContextProvider = ({ children, setwelcome }) => {
       setwelcome(false)
     }
 
+    socket.emit("isAuthenticated")
+
     socket.on("qr", (qr) => {
       setQR(qr)
     })
 
-    socket.on("authenticated", () => {
-      setauthenticated(true)
-      navigate("/home")
+    socket.on("loading_screen", ({ percent, message }) => {})
+    socket.on("authenticated", (isAuthenticated) => {
+      setauthenticated(isAuthenticated)
     })
 
     socket.on("sent", () => {
@@ -76,12 +82,13 @@ const ContextProvider = ({ children, setwelcome }) => {
       setauthenticated(false)
       navigate("/login")
     })
-  }, [navigate, location, setwelcome])
+  }, [navigate, location, setwelcome, authenticated])
 
   return (
     <SocketContext.Provider
       value={{
         authenticated,
+        Navigate,
         getStarted,
         QR,
         socket,

@@ -11,8 +11,15 @@ import * as XLSX from "xlsx"
 import { SocketContext } from "../../context"
 
 const Home = () => {
-  const { excelFile, setExcelFile, excelData, setExcelData, readExcelData } =
-    useContext(SocketContext)
+  const {
+    excelFile,
+    setExcelFile,
+    excelData,
+    setExcelData,
+    readExcelData,
+    authenticated,
+    Navigate
+  } = useContext(SocketContext)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [fileName, setfileName] = useState("")
@@ -26,6 +33,12 @@ const Home = () => {
       }
     })
   }
+
+  useEffect(() => {
+    if (!authenticated) {
+      Navigate("/login")
+    }
+  }, [authenticated, Navigate])
 
   useEffect(() => {
     if (excelData !== null) {

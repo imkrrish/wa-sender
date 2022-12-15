@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Lottie from "lottie-react"
 import WelcomeBot from "../../assests/welcome-animation.json"
 import styles from "./Welcome.module.css"
@@ -8,7 +8,13 @@ import Button from "@mui/material/Button"
 import { SocketContext } from "../../context"
 import { useContext } from "react"
 const Welcome = () => {
-  const { getStarted } = useContext(SocketContext)
+  const { getStarted, authenticated, Navigate } = useContext(SocketContext)
+
+  useEffect(() => {
+    if (authenticated) {
+      Navigate("/home")
+    }
+  }, [authenticated, Navigate])
   return (
     <Container maxWidth="sm">
       <Lottie animationData={WelcomeBot} className={styles.bot} />

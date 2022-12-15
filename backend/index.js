@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
 
 const ContactsData = []
 let counter = { total: 0, failed: 0, success: 0, skiped: 0 }
+let isAuthenticated = false
 
 const client = new Client({
   restartOnAuthFail: true,
@@ -46,8 +47,13 @@ const client = new Client({
   authStrategy: new LocalAuth({ dataPath: "./session" })
 })
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("conected")
+
+  socket.on("isAuthenticated", () => {
+    console.log("authenticated", isAuthenticated)
+    socket.emit("authenticated", isAuthenticated)
+  })
 
   socket.on("getStarted", () => {
     client.initialize()
@@ -64,8 +70,9 @@ io.on("connection", (socket) => {
   })
 
   client.on("authenticated", (session) => {
-    socket.emit("authenticated")
-    console.log("authenticated", session)
+    isAuthenticated = true
+    socket.emit("authenticated", isAuthenticated)
+    console.log("authenticated", { session, isAuthenticated })
   })
 
   client.on("auth_failure", function (session) {
@@ -74,11 +81,11 @@ io.on("connection", (socket) => {
   })
 
   client.on("disconnected", async (reason) => {
-    console.log("disconnected", reason)
+    isAuthenticated = false
     await client.destroy()
     console.log("disconnected", reason)
+    socket.emit("authenticated", isAuthenticated)
     client.initialize()
-    socket.emit("disconnected")
   })
 
   socket.on("reset", () => {
@@ -135,6 +142,7 @@ io.on("connection", (socket) => {
   })
 
   client.on("loading_screen", (percent, message) => {
+    socket.emit("loading_screen", { percent, message })
     console.log("LOADING SCREEN", percent, message)
   })
 })

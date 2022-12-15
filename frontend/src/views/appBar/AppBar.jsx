@@ -23,6 +23,8 @@ export default function MenuAppBar() {
     setAnchorEl(null)
   }
 
+  console.log(authenticated)
+
   return (
     <Container>
       <AppBar

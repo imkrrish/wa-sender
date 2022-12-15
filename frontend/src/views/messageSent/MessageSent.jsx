@@ -1,5 +1,5 @@
 import { Box, Container, Chip, Badge, Button } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import DoneIcon from "@mui/icons-material/Done"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh"
@@ -60,10 +60,15 @@ const columns = [
 ]
 
 const MessageSent = () => {
-  const { Counter, Contact, sendMore } = useContext(SocketContext)
+  const { Counter, Contact, sendMore, authenticated, Navigate } =
+    useContext(SocketContext)
   const [pageSize, setPageSize] = useState(5)
-  console.log(Counter)
-  console.log(Contact)
+
+  useEffect(() => {
+    if (!authenticated) {
+      Navigate("/login")
+    }
+  }, [authenticated, Navigate])
 
   return (
     <Container className={styles.container}>
